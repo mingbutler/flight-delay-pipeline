@@ -1,0 +1,6 @@
+.env
+venv
+venv/
+
+bts_data/
+live_raw_data/
