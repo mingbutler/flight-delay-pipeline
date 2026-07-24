@@ -9,6 +9,8 @@ import pandas as pd
 from dotenv import load_dotenv
 import json
 
+from google.cloud import storage
+
 load_dotenv()
 
 API_KEY = os.environ.get("AERODATABOX_API_KEY")
@@ -85,16 +87,16 @@ def fetch_day(date_str: str, airports: list) -> pd.DataFrame:
     return pd.DataFrame(all_records)
 
 # load live data as parquet to directory
-def land_parquet(df: pd.DataFrame, date_str: str):
-    dt = datetime.strptime(date_str, "%Y-%m-%d")
+def land_parquet_gcs(df: pd.DataFrame, date_str, bucket_name="flight-delay-raw"):
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
     
-    partition_dir = os.path.join(RAW_DATA_DIR, f"flights_live_{dt.year}_{dt.month:02d}")
-    if not os.path.exists(partition_dir):
-        os.makedirs(partition_dir)
-        
-    out_path = os.path.join(partition_dir, f"flights_{date_str}.parquet")
-    df.to_parquet(out_path, index=False)
-    print(f"Wrote {len(df):,} rows -> {out_path}")
+    dt = datetime.strptime(date_str, "%Y-%m-%d")
+    blob = bucket.blob(f"raw/live/flights_live_{dt.year}_{dt.month:02d}/flights_{date_str}.parquet")
+    blob.upload_from_string(df.to_parquet(index=False), content_type="application/octet-stream")
+    
+    print(f"Wrote {len(df):,} rows -> {bucket_name}")
+    
     
 def main():
     parser = argparse.ArgumentParser()
@@ -112,7 +114,7 @@ def main():
  
     airports = [a.strip().upper() for a in args.airports.split(",")]
     df = fetch_day(args.date, airports)
-    land_parquet(df, args.date)
+    land_parquet_gcs(df, args.date)
  
  
 if __name__ == "__main__":

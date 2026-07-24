@@ -2,14 +2,14 @@ import os
 import io
 import sys
 
-import argparse
 from zipfile import ZipFile
 from datetime import datetime
-import zipfile
 
 import requests
 import pandas as pd
 from dateutil.relativedelta import relativedelta
+
+from google.cloud import storage
 
 '''
 - downloads pre-zipped data files from the US DOT Bureau of
@@ -76,7 +76,7 @@ def download_month():
         response = requests.get(url, stream=True, timeout=120)
         response.raise_for_status()
         
-        with zipfile.ZipFile(io.BytesIO(response.content)) as file:
+        with ZipFile(io.BytesIO(response.content)) as file:
             csv_file = next(n for n in file.namelist() if n.endswith('.csv'))
             with file.open(csv_file) as f:
                 df = pd.read_csv(f, usecols=lambda c: c in COLUMNS_KEEP, low_memory=False)
@@ -87,19 +87,18 @@ def download_month():
         print(f"Error during download: {e}")
         sys.exit(1)
 
-def land_parquet(df: pd.DataFrame, year: int, month: int):   
-    partition_dir = os.path.join(RAW_DATA_DIR, f"bts_ontime_{year}_{month:02d}")
-    if not os.path.exists(partition_dir):
-        os.makedirs(partition_dir)
-    out_path = os.path.join(partition_dir, "flights.parquet")
-    df.to_parquet(out_path, index=False)
-    
-    print(f"Wrote {len(df):,} rows -> {out_path}")
+def land_parquet_gcs(df: pd.DataFrame, year, month, bucket_name="flight-delay-raw"):  
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(f"raw/bts/bts_ontime_{year}_{month:02d}/flights.parquet")
+    blob.upload_from_string(df.to_parquet(index=False), content_type="application/octet-stream")
+     
+    print(f"Wrote {len(df):,} rows -> {bucket_name}")
     
 def main():
     try:
         df, year, month = download_month()
-        land_parquet(df, year, month) 
+        land_parquet_gcs(df, year, month) 
     except requests.HTTPError as e:
         print(
                 f"  Failed for {year}-{month:02d}: {e}. "
