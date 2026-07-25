@@ -90,7 +90,7 @@ def download_month():
 def land_parquet_gcs(df: pd.DataFrame, year, month, bucket_name="flight-delay-raw"):  
     client = storage.Client()
     bucket = client.bucket(bucket_name)
-    blob = bucket.blob(f"raw/bts/bts_ontime_{year}_{month:02d}/flights.parquet")
+    blob = bucket.blob(f"raw/bts/year={year}/month={month:02d}/flights.parquet")
     blob.upload_from_string(df.to_parquet(index=False), content_type="application/octet-stream")
      
     print(f"Wrote {len(df):,} rows -> {bucket_name}")
