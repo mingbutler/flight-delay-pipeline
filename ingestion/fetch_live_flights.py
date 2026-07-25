@@ -92,7 +92,7 @@ def land_parquet_gcs(df: pd.DataFrame, date_str, bucket_name="flight-delay-raw")
     bucket = client.bucket(bucket_name)
     
     dt = datetime.strptime(date_str, "%Y-%m-%d")
-    blob = bucket.blob(f"raw/live/flights_live_{dt.year}_{dt.month:02d}/flights_{date_str}.parquet")
+    blob = bucket.blob(f"raw/live/flights_live_{date_str}/flights.parquet")
     blob.upload_from_string(df.to_parquet(index=False), content_type="application/octet-stream")
     
     print(f"Wrote {len(df):,} rows -> {bucket_name}")
