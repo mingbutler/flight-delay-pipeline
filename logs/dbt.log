@@ -1,0 +1,190 @@
+==================== 2026-07-26T03:22:59.338062Z | 019f9c72-877b-7de2-89c5-26f038657c79 ====================
+03:23:50.919925 [debug]: Requesting license from https://vw378.us1.dbt.com/api/private/accounts/70506183151839/feature-licenses/ with 1 key IDs: ["fusion-prod-2025-11-20"]
+03:23:51.236455 [debug]: License successfully retrieved from remote
+03:23:51.241193 [debug]: License cached to file for account 70506183151839
+[0m17:46:57.952375 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10cdfcd70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e42f750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e42f250>]}
+
+
+============================== 17:46:57.956602 | 058a66fd-bd37-4ef8-9590-7b075a8c202e ==============================
+[0m17:46:57.956602 [info ] [MainThread]: Running with dbt=1.12.0
+[0m17:46:57.956950 [debug] [MainThread]: running dbt with arguments {'no_print': 'None', 'use_experimental_parser': 'False', 'empty': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'fail_fast': 'False', 'printer_width': '80', 'use_colors': 'True', 'log_format': 'default', 'profiles_dir': '/Users/ming/.dbt', 'log_path': 'logs', 'warn_error': 'None', 'maximum_seed_size_mib': '1', 'log_cache_events': 'False', 'target_path': 'None', 'debug': 'False', 'hints_enabled': 'True', 'write_json': 'True', 'partial_parse': 'True', 'static_parser': 'True', 'indirect_selection': 'eager', 'version_check': 'True', 'invocation_command': 'dbt init dbt_project', 'introspect': 'True', 'cache_selected_only': 'False', 'send_anonymous_usage_stats': 'True', 'quiet': 'False'}
+[0m17:46:57.970768 [debug] [MainThread]: Starter project path: /Users/ming/Documents/Projects/flight-delay-pipeline/venv/lib/python3.14/site-packages/dbt/include/starter_project
+[0m17:46:57.974793 [info ] [MainThread]: Setting up your profile.
+[0m17:50:07.849557 [info ] [MainThread]: Profile dbt_project written to /Users/ming/.dbt/profiles.yml using target's profile_template.yml and your supplied values.
+[0m17:50:07.867374 [info ] [MainThread]: Running dbt debug to validate the project...
+[0m17:50:07.870059 [info ] [MainThread]: dbt version: 1.12.0
+[0m17:50:07.870344 [info ] [MainThread]: python version: 3.14.3
+[0m17:50:07.870565 [info ] [MainThread]: python path: /Users/ming/Documents/Projects/flight-delay-pipeline/venv/bin/python3.14
+[0m17:50:07.870818 [info ] [MainThread]: os info: macOS-26.5.2-arm64-arm-64bit-Mach-O
+[0m17:50:07.926658 [info ] [MainThread]: Using profiles dir at /Users/ming/.dbt
+[0m17:50:07.927013 [info ] [MainThread]: Using profiles.yml file at /Users/ming/.dbt/profiles.yml
+[0m17:50:07.927169 [info ] [MainThread]: Using dbt_project.yml file at /Users/ming/Documents/Projects/flight-delay-pipeline/dbt_project/dbt_project.yml
+[0m17:50:07.927313 [info ] [MainThread]: adapter type: bigquery
+[0m17:50:07.927437 [info ] [MainThread]: adapter version: 1.12.0
+[0m17:50:08.041011 [info ] [MainThread]: Configuration:
+[0m17:50:08.041314 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m17:50:08.041482 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m17:50:08.041661 [info ] [MainThread]: Required dependencies:
+[0m17:50:08.042009 [debug] [MainThread]: Executing "git --help"
+[0m17:50:08.081492 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n           [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n           <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone      Clone a repository into a new directory\n   init       Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add        Add file contents to the index\n   mv         Move or rename a file, a directory, or a symlink\n   restore    Restore working tree files\n   rm         Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect     Use binary search to find the commit that introduced a bug\n   diff       Show changes between commits, commit and working tree, etc\n   grep       Print lines matching a pattern\n   log        Show commit logs\n   show       Show various types of objects\n   status     Show the working tree status\n\ngrow, mark and tweak your common history\n   backfill   Download missing objects in a partial clone\n   branch     List, create, or delete branches\n   commit     Record changes to the repository\n   history    EXPERIMENTAL: Rewrite history\n   merge      Join two or more development histories together\n   rebase     Reapply commits on top of another base tip\n   reset      Set `HEAD` or the index to a known state\n   switch     Switch branches\n   tag        Create, list, delete or verify tags\n\ncollaborate (see also: git help workflows)\n   fetch      Download objects and refs from another repository\n   pull       Fetch from and integrate with another repository or a local branch\n   push       Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m17:50:08.082099 [debug] [MainThread]: STDERR: "b''"
+[0m17:50:08.082304 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m17:50:08.082477 [info ] [MainThread]: Connection:
+[0m17:50:08.082681 [info ] [MainThread]:   method: service-account
+[0m17:50:08.082811 [info ] [MainThread]:   database: flight-delay-pipeline
+[0m17:50:08.082936 [info ] [MainThread]:   execution_project: flight-delay-pipeline
+[0m17:50:08.083060 [info ] [MainThread]:   schema: staging
+[0m17:50:08.083180 [info ] [MainThread]:   location: US
+[0m17:50:08.083294 [info ] [MainThread]:   priority: interactive
+[0m17:50:08.083408 [info ] [MainThread]:   maximum_bytes_billed: None
+[0m17:50:08.083524 [info ] [MainThread]:   reservation: None
+[0m17:50:08.083639 [info ] [MainThread]:   impersonate_service_account: None
+[0m17:50:08.083752 [info ] [MainThread]:   job_retry_deadline_seconds: None
+[0m17:50:08.083863 [info ] [MainThread]:   job_retries: 1
+[0m17:50:08.083976 [info ] [MainThread]:   job_creation_timeout_seconds: None
+[0m17:50:08.084088 [info ] [MainThread]:   job_execution_timeout_seconds: 300
+[0m17:50:08.084200 [info ] [MainThread]:   job_link_info_level_log: False
+[0m17:50:08.084316 [info ] [MainThread]:   timeout_seconds: 300
+[0m17:50:08.084427 [info ] [MainThread]:   client_id: None
+[0m17:50:08.084537 [info ] [MainThread]:   token_uri: None
+[0m17:50:08.084650 [info ] [MainThread]:   compute_region: None
+[0m17:50:08.084758 [info ] [MainThread]:   dataproc_cluster_name: None
+[0m17:50:08.084872 [info ] [MainThread]:   gcs_bucket: None
+[0m17:50:08.084983 [info ] [MainThread]:   dataproc_batch: None
+[0m17:50:08.085369 [info ] [MainThread]: Registered adapter: bigquery=1.12.0
+[0m17:50:08.234497 [debug] [MainThread]: Acquiring new bigquery connection 'debug'
+[0m17:50:08.234883 [debug] [MainThread]: On debug: select 1 as id
+[0m17:50:08.235119 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m17:50:09.756256 [error] [MainThread]: BigQuery adapter: https://console.cloud.google.com/bigquery?project=flight-delay-pipeline&j=bq:US:abcbc634-0d7a-404e-8607-a4483816024d&page=queryresults
+[0m17:50:09.759894 [info ] [MainThread]:   Connection test: [[31mERROR[0m]
+
+[0m17:50:09.760545 [info ] [MainThread]: [31m1 check failed:[0m
+[0m17:50:09.760952 [info ] [MainThread]: dbt was unable to connect to the specified database.
+The database returned the following error:
+
+  >Database Error
+  Not found: Project flight-delay-pipeline
+
+Check your database credentials and try again. For more information, visit:
+https://docs.getdbt.com/docs/configure-your-profile
+
+
+[0m17:50:09.761710 [info ] [MainThread]: Your new dbt project "dbt_project" was created!
+Initialized new project in /Users/ming/Documents/Projects/flight-delay-pipeline/dbt_project/dbt_project
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m17:50:09.762253 [info ] [MainThread]: [31mYour profile may need adjustments. You can find the logs of `dbt debug` above[0m
+[0m17:50:09.791567 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 191.9148, "process_in_blocks": "0", "process_kernel_time": 0.501577, "process_mem_max_rss": "233340928", "process_out_blocks": "0", "process_user_time": 1.437953}
+[0m17:50:09.792760 [debug] [MainThread]: Command `dbt init` succeeded at 17:50:09.792505 after 191.92 seconds
+[0m17:50:09.793344 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m17:50:09.794819 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11ce30770>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11cf1b2f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11d0a0f30>]}
+[0m17:50:09.795380 [debug] [MainThread]: Flushing usage events
+[0m17:50:10.028361 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m18:02:29.767094 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b040d70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c673750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c673250>]}
+
+
+============================== 18:02:29.770618 | f0ad3365-ce97-4f13-8f2b-7fa9072007b3 ==============================
+[0m18:02:29.770618 [info ] [MainThread]: Running with dbt=1.12.0
+[0m18:02:29.770944 [debug] [MainThread]: running dbt with arguments {'write_json': 'True', 'fail_fast': 'False', 'introspect': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'cache_selected_only': 'False', 'static_parser': 'True', 'partial_parse': 'True', 'printer_width': '80', 'hints_enabled': 'True', 'empty': 'None', 'no_print': 'None', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'log_path': 'logs', 'use_experimental_parser': 'False', 'warn_error': 'None', 'log_cache_events': 'False', 'maximum_seed_size_mib': '1', 'version_check': 'True', 'log_format': 'default', 'debug': 'False', 'invocation_command': 'dbt debug --config-dir', 'profiles_dir': '/Users/ming/.dbt', 'indirect_selection': 'eager', 'use_colors': 'True'}
+[0m18:02:29.781011 [info ] [MainThread]: To view your profiles.yml file, run:
+
+open /Users/ming/.dbt
+[0m18:02:29.783295 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": true, "command_wall_clock_time": 0.07177763, "process_in_blocks": "0", "process_kernel_time": 0.171703, "process_mem_max_rss": "130990080", "process_out_blocks": "0", "process_user_time": 0.658146}
+[0m18:02:29.783597 [debug] [MainThread]: Command `dbt debug` succeeded at 18:02:29.783540 after 0.07 seconds
+[0m18:02:29.783778 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c4aec40>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c4c3530>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c6bf570>]}
+[0m18:02:29.783971 [debug] [MainThread]: Flushing usage events
+[0m18:02:30.054677 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m18:09:22.747578 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b7ecd70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10ce1f750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10ce1f250>]}
+
+
+============================== 18:09:22.751232 | c69430ef-aa36-401f-86d9-38e77093575f ==============================
+[0m18:09:22.751232 [info ] [MainThread]: Running with dbt=1.12.0
+[0m18:09:22.751557 [debug] [MainThread]: running dbt with arguments {'invocation_command': 'dbt init dbt_project', 'quiet': 'False', 'write_json': 'True', 'empty': 'None', 'use_experimental_parser': 'False', 'send_anonymous_usage_stats': 'True', 'target_path': 'None', 'version_check': 'True', 'log_cache_events': 'False', 'profiles_dir': '/Users/ming/.dbt', 'use_colors': 'True', 'printer_width': '80', 'maximum_seed_size_mib': '1', 'static_parser': 'True', 'log_format': 'default', 'hints_enabled': 'True', 'log_path': 'logs', 'no_print': 'None', 'cache_selected_only': 'False', 'warn_error': 'None', 'indirect_selection': 'eager', 'debug': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'fail_fast': 'False', 'partial_parse': 'True', 'introspect': 'True'}
+[0m18:09:22.762548 [debug] [MainThread]: Starter project path: /Users/ming/Documents/Projects/flight-delay-pipeline/venv/lib/python3.14/site-packages/dbt/include/starter_project
+[0m18:09:22.772738 [info ] [MainThread]: Setting up your profile.
+[0m18:11:19.189293 [info ] [MainThread]: Profile dbt_project written to /Users/ming/.dbt/profiles.yml using target's profile_template.yml and your supplied values.
+[0m18:11:19.226415 [info ] [MainThread]: Running dbt debug to validate the project...
+[0m18:11:19.229045 [info ] [MainThread]: dbt version: 1.12.0
+[0m18:11:19.229297 [info ] [MainThread]: python version: 3.14.3
+[0m18:11:19.229467 [info ] [MainThread]: python path: /Users/ming/Documents/Projects/flight-delay-pipeline/venv/bin/python3.14
+[0m18:11:19.229637 [info ] [MainThread]: os info: macOS-26.5.2-arm64-arm-64bit-Mach-O
+[0m18:11:19.287145 [info ] [MainThread]: Using profiles dir at /Users/ming/.dbt
+[0m18:11:19.287413 [info ] [MainThread]: Using profiles.yml file at /Users/ming/.dbt/profiles.yml
+[0m18:11:19.287576 [info ] [MainThread]: Using dbt_project.yml file at /Users/ming/Documents/Projects/flight-delay-pipeline/dbt_project/dbt_project.yml
+[0m18:11:19.287721 [info ] [MainThread]: adapter type: bigquery
+[0m18:11:19.287848 [info ] [MainThread]: adapter version: 1.12.0
+[0m18:11:19.432579 [info ] [MainThread]: Configuration:
+[0m18:11:19.432898 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m18:11:19.433067 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m18:11:19.433206 [info ] [MainThread]: Required dependencies:
+[0m18:11:19.433818 [debug] [MainThread]: Executing "git --help"
+[0m18:11:19.451122 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n           [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n           <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone      Clone a repository into a new directory\n   init       Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add        Add file contents to the index\n   mv         Move or rename a file, a directory, or a symlink\n   restore    Restore working tree files\n   rm         Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect     Use binary search to find the commit that introduced a bug\n   diff       Show changes between commits, commit and working tree, etc\n   grep       Print lines matching a pattern\n   log        Show commit logs\n   show       Show various types of objects\n   status     Show the working tree status\n\ngrow, mark and tweak your common history\n   backfill   Download missing objects in a partial clone\n   branch     List, create, or delete branches\n   commit     Record changes to the repository\n   history    EXPERIMENTAL: Rewrite history\n   merge      Join two or more development histories together\n   rebase     Reapply commits on top of another base tip\n   reset      Set `HEAD` or the index to a known state\n   switch     Switch branches\n   tag        Create, list, delete or verify tags\n\ncollaborate (see also: git help workflows)\n   fetch      Download objects and refs from another repository\n   pull       Fetch from and integrate with another repository or a local branch\n   push       Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m18:11:19.451619 [debug] [MainThread]: STDERR: "b''"
+[0m18:11:19.451805 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m18:11:19.452076 [info ] [MainThread]: Connection:
+[0m18:11:19.452314 [info ] [MainThread]:   method: service-account
+[0m18:11:19.452455 [info ] [MainThread]:   database: flight-delay-pipeline-503203
+[0m18:11:19.452610 [info ] [MainThread]:   execution_project: flight-delay-pipeline-503203
+[0m18:11:19.452733 [info ] [MainThread]:   schema: staging
+[0m18:11:19.452855 [info ] [MainThread]:   location: US
+[0m18:11:19.452973 [info ] [MainThread]:   priority: interactive
+[0m18:11:19.453089 [info ] [MainThread]:   maximum_bytes_billed: None
+[0m18:11:19.453204 [info ] [MainThread]:   reservation: None
+[0m18:11:19.453321 [info ] [MainThread]:   impersonate_service_account: None
+[0m18:11:19.453434 [info ] [MainThread]:   job_retry_deadline_seconds: None
+[0m18:11:19.453551 [info ] [MainThread]:   job_retries: 1
+[0m18:11:19.453665 [info ] [MainThread]:   job_creation_timeout_seconds: None
+[0m18:11:19.453776 [info ] [MainThread]:   job_execution_timeout_seconds: 300
+[0m18:11:19.453892 [info ] [MainThread]:   job_link_info_level_log: False
+[0m18:11:19.454005 [info ] [MainThread]:   timeout_seconds: 300
+[0m18:11:19.454116 [info ] [MainThread]:   client_id: None
+[0m18:11:19.454228 [info ] [MainThread]:   token_uri: None
+[0m18:11:19.454339 [info ] [MainThread]:   compute_region: None
+[0m18:11:19.454452 [info ] [MainThread]:   dataproc_cluster_name: None
+[0m18:11:19.454563 [info ] [MainThread]:   gcs_bucket: None
+[0m18:11:19.454672 [info ] [MainThread]:   dataproc_batch: None
+[0m18:11:19.455540 [info ] [MainThread]: Registered adapter: bigquery=1.12.0
+[0m18:11:19.617425 [debug] [MainThread]: Acquiring new bigquery connection 'debug'
+[0m18:11:19.617855 [debug] [MainThread]: On debug: select 1 as id
+[0m18:11:19.618105 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m18:11:20.818599 [debug] [MainThread]: BigQuery adapter: https://console.cloud.google.com/bigquery?project=flight-delay-pipeline-503203&j=bq:US:f91669f3-f722-4cf6-83ed-c3885d03d84a&page=queryresults
+[0m18:11:21.095128 [debug] [MainThread]: SQL status: OK in 0.275 seconds
+[0m18:11:21.484297 [info ] [MainThread]:   Connection test: [[32mOK connection ok[0m]
+
+[0m18:11:21.484798 [info ] [MainThread]: [32mAll checks passed![0m
+[0m18:11:21.485426 [info ] [MainThread]: Your new dbt project "dbt_project" was created!
+Initialized new project in /Users/ming/Documents/Projects/flight-delay-pipeline/dbt_project/dbt_project
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m18:11:21.492513 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 118.80037, "process_in_blocks": "0", "process_kernel_time": 0.525623, "process_mem_max_rss": "233275392", "process_out_blocks": "0", "process_user_time": 1.305131}
+[0m18:11:21.493082 [debug] [MainThread]: Command `dbt init` succeeded at 18:11:21.492947 after 118.80 seconds
+[0m18:11:21.493424 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m18:11:21.493760 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11b737950>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11b93f2f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11b86bdf0>]}
+[0m18:11:21.494141 [debug] [MainThread]: Flushing usage events
+[0m18:11:21.743231 [debug] [MainThread]: An error was encountered while trying to flush usage events
