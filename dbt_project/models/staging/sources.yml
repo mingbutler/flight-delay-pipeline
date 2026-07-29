@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: bts_ontime
+        description: "Historical BTS on-time performance data, loaded from GCS"
+      - name: live_flights
+        description: "Live AeroDataBox flight data, Hive-partitioned by dt"

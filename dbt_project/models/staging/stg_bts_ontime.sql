@@ -1,0 +1,21 @@
+select
+    cast(FlightDate as date) as flight_date,
+    Reporting_Airline as carrier,
+    Origin,
+    Dest,
+    CRSDepTime as scheduled_dep_time,
+    DepTime as actual_dep_time,
+    DepDelayMinutes as dep_delay_minutes,
+    CRSArrTime as scheduled_arr_time,
+    ArrTime as actual_arr_time,
+    ArrDelayMinutes as arr_delay_minutes,
+    Cancelled as is_cancelled,
+    CancellationCode as cancellation_code,
+    Diverted as is_diverted,
+    Distance as distance,
+    CarrierDelay as carrier_delay,
+    WeatherDelay as weather_delay,
+    NASDelay as nas_delay,
+    SecurityDelay as security_delay,
+    LateAircraftDelay as late_aircraft_delay
+from {{ source('raw', 'bts_ontime') }}

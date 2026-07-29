@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_bts_ontime
+    description: "Cleaned historical BTS flight records"
+    columns:
+      - name: flight_date
+        tests:
+          - not_null
+      - name: carrier
+        tests:
+          - not_null
+      - name: cancellation_code
+        tests:
+          - accepted_values:
+              arguments: 
+                values: ['A', 'B', 'C', 'D', null]
+
+  - name: stg_live_flights
+    description: "Cleaned live AeroDataBox flight records"
+    columns:
+      - name: flight_date
+        tests:
+          - not_null
+      - name: direction
+        tests:
+          - accepted_values:
+              arguments: 
+                values: ['departure', 'arrival']
