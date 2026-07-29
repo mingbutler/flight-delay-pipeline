@@ -6,3 +6,5 @@ bts_data/
 live_raw_data/
 
 flight-delay-pipeline-503203-6b6f239d0c2c.json
+
+logs/

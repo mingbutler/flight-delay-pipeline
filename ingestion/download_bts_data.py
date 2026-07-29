@@ -53,7 +53,7 @@ def get_latest_available_month():
     raise FileNotFoundError("Could not locate any recent BTS zip files. Please check your network connection.")
 
 COLUMNS_KEEP = [
-    "FlightDate", "Reporting_Airline", "Origin", "Dest",
+    "FlightDate", "Reporting_Airline", "Flight_Number_Reporting_Airline", "Origin", "Dest",
     "CRSDepTime", "DepTime", "DepDelayMinutes",
     "CRSArrTime", "ArrTime", "ArrDelayMinutes",
     "Cancelled", "CancellationCode", "Diverted",

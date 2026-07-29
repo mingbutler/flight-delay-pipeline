@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_flights_joined
+    description: "BTS historical records left-joined against AeroDataBox live records on carrier, flight number, date, and origin"
+    columns:
+      - name: flight_number
+        tests:
+          - not_null
+      - name: carrier
+        tests:
+          - not_null
