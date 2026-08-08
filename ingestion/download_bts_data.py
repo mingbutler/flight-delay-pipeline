@@ -1,4 +1,3 @@
-import os 
 import io
 import sys
 
@@ -17,6 +16,8 @@ Transportation Statistics (BTS) "Airline On-Time Performance"
 '''
 
 RAW_DATA_DIR = "/Users/ming/Documents/Projects/flight-delay-pipeline/bts_data"
+
+PAST_MONTHS_DOWNLOADED = set()
 
 def check_url_exists(url):
     try:
@@ -38,8 +39,12 @@ def get_latest_available_month():
         url = f"https://transtats.bts.gov/PREZIP/On_Time_Reporting_Carrier_On_Time_Performance_1987_present_{year}_{month}.zip"
         print(f"Checking {year}-{month:02d}... ", end="")
         
+        if (year, month) in PAST_MONTHS_DOWNLOADED:
+            raise FileExistsError(f"Month {year}-{month:02d} already downloaded.")
+        
         if check_url_exists(url):
             print("FOUND!")
+            PAST_MONTHS_DOWNLOADED.add((year, month))
             return url, year, month
         
         print(f"Month of {month} not available yet.")
@@ -67,8 +72,7 @@ def download_month():
     try:
         url, year, month = get_latest_available_month()
     except FileNotFoundError as e:
-        print(e)
-        sys.exit(1)
+        raise RuntimeError(f"No recent BTS zip files found: {e}") from e
     
     # download with progress bar
     print(f"\nDownloading: {url}")
@@ -84,8 +88,7 @@ def download_month():
         return df, year, month
 
     except requests.RequestException as e:
-        print(f"Error during download: {e}")
-        sys.exit(1)
+        raise RuntimeError(f"Error during download: {e}") from e
 
 def land_parquet_gcs(df: pd.DataFrame, year, month, bucket_name="flight-delay-raw"):  
     client = storage.Client()
@@ -95,7 +98,7 @@ def land_parquet_gcs(df: pd.DataFrame, year, month, bucket_name="flight-delay-ra
      
     print(f"Wrote {len(df):,} rows -> {bucket_name}")
     
-def main():
+def run():
     try:
         df, year, month = download_month()
         land_parquet_gcs(df, year, month) 
@@ -107,4 +110,4 @@ def main():
             )
             
 if __name__ == "__main__":
-    main()
+    run()

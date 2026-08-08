@@ -10,14 +10,13 @@ from dotenv import load_dotenv
 import json
 
 from google.cloud import storage
+from airflow.models import Variable
 
 load_dotenv()
 
-API_KEY = os.environ.get("AERODATABOX_API_KEY")
+API_KEY = Variable.get("AERODATABOX_API_KEY")
 API_HOST = "aerodatabox.p.rapidapi.com"
 BASE_URL = "https://aerodatabox.p.rapidapi.com/flights/airports/iata"
-
-RAW_DATA_DIR = "/Users/ming/Documents/Projects/flight-delay-pipeline/live_raw_data"
 
 DEFAULT_AIRPORTS = ["ATL"]
 
@@ -98,24 +97,10 @@ def land_parquet_gcs(df: pd.DataFrame, date_str, bucket_name="flight-delay-raw")
     print(f"Wrote {len(df):,} rows -> {bucket_name}")
     
     
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--date",
-        default=(datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d"),
-        help="YYYY-MM-DD, defaults to yesterday",
-    )
-    parser.add_argument(
-        "--airports",
-        default=",".join(DEFAULT_AIRPORTS),
-        help="Comma-separated IATA airport codes",
-    )
-    args = parser.parse_args()
- 
-    airports = [a.strip().upper() for a in args.airports.split(",")]
-    df = fetch_day(args.date, airports)
-    land_parquet_gcs(df, args.date)
+def run(date_str: str, airports: list[str]):
+    df = fetch_day(date_str, airports)
+    land_parquet_gcs(df, date_str)
  
  
 if __name__ == "__main__":
-    main()
+    run()
