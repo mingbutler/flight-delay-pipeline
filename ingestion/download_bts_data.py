@@ -1,5 +1,5 @@
 import io
-import sys
+import os
 
 from zipfile import ZipFile
 from datetime import datetime
@@ -15,7 +15,7 @@ from google.cloud import storage
 Transportation Statistics (BTS) "Airline On-Time Performance"
 '''
 
-RAW_DATA_DIR = "/Users/ming/Documents/Projects/flight-delay-pipeline/bts_data"
+GCS_BUCKET = os.environ.get("GCS_BUCKET", "flight-delay-raw")
 
 PAST_MONTHS_DOWNLOADED = set()
 
@@ -90,7 +90,7 @@ def download_month():
     except requests.RequestException as e:
         raise RuntimeError(f"Error during download: {e}") from e
 
-def land_parquet_gcs(df: pd.DataFrame, year, month, bucket_name="flight-delay-raw"):  
+def land_parquet_gcs(df: pd.DataFrame, year, month, bucket_name=GCS_BUCKET):  
     client = storage.Client()
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(f"raw/bts/year={year}/month={month:02d}/flights.parquet")

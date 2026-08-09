@@ -1,6 +1,6 @@
 import datetime
 import os
-import argparse
+
 from datetime import datetime, timedelta, timezone
 from textwrap import indent
 
@@ -14,16 +14,20 @@ from airflow.models import Variable
 
 load_dotenv()
 
+GCS_BUCKET = os.environ.get("GCS_BUCKET", "flight-delay-raw")
+
 API_KEY = Variable.get("AERODATABOX_API_KEY")
 API_HOST = "aerodatabox.p.rapidapi.com"
 BASE_URL = "https://aerodatabox.p.rapidapi.com/flights/airports/iata"
 
 DEFAULT_AIRPORTS = ["ATL"]
 
-HEADERS = {
-    "X-RapidAPI-Key": API_KEY,
-    "X-RapidAPI-Host": API_HOST,
-}
+def _get_headers() -> dict:
+    api_key = Variable.get("AERODATABOX_API_KEY")
+    return {
+        "X-RapidAPI-Key": api_key,
+        "X-RapidAPI-Host": API_HOST,
+    }
 
 # maps AeroDataBoxs nested JSON fields to the flat column names used by the bts data model
 # sources land in a consistent shape.
@@ -59,7 +63,7 @@ def fetch_window(airport: str, from_local: str, to_local: str) -> list:
         "withCargo": "false",
         "withPrivate": "false",
     }
-    response = requests.get(url, headers=HEADERS, params=params, timeout=60)
+    response = requests.get(url, headers=_get_headers(), params=params, timeout=60)
     response.raise_for_status()
     payload = response.json()
     
@@ -86,7 +90,7 @@ def fetch_day(date_str: str, airports: list) -> pd.DataFrame:
     return pd.DataFrame(all_records)
 
 # load live data as parquet to directory
-def land_parquet_gcs(df: pd.DataFrame, date_str, bucket_name="flight-delay-raw"):
+def land_parquet_gcs(df: pd.DataFrame, date_str, bucket_name=GCS_BUCKET):
     client = storage.Client()
     bucket = client.bucket(bucket_name)
     

@@ -1,0 +1,13 @@
+.venv
+.airflow_venv
+__pycache__
+*.pyc
+.git
+.env
+secrets/
+bts_data/
+live_raw_data/
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+logs/

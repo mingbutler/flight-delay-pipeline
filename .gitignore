@@ -9,8 +9,14 @@ live_raw_data/
 
 flight-delay-pipeline-503203-6b6f239d0c2c.json
 
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
 logs/
 
 .python-version
 pyproject.toml
 uv.lock
+
+secrets/
+docker/dbt/profiles.yml
