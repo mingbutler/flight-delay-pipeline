@@ -31,7 +31,7 @@ def _get_headers() -> dict:
 
 # maps AeroDataBoxs nested JSON fields to the flat column names used by the bts data model
 # sources land in a consistent shape.
-def flatten_flight_data(record: dict, airport: str, direction: str) -> dict:
+def flatten_flight_data(record, airport, direction):
     departure_flight = record.get('departure') or {}
     arrival_flight = record.get('arrival') or {}
     
@@ -53,7 +53,7 @@ def flatten_flight_data(record: dict, airport: str, direction: str) -> dict:
         "Direction": direction,
     }
     
-def fetch_window(airport: str, from_local: str, to_local: str) -> list:
+def fetch_window(airport, from_local, to_local):
     url = f"{BASE_URL}/{airport}/{from_local}/{to_local}"
     params = {
         "withLeg": "true",
@@ -76,7 +76,7 @@ def fetch_window(airport: str, from_local: str, to_local: str) -> list:
         records.append(flatten_flight_data(flight, airport, "arrival"))
     return records
 
-def fetch_day(date_str: str, airports: list) -> pd.DataFrame:
+def fetch_day(date_str, airports):
     all_records = []
     for airport in airports:
         # each call limited to 12-hour window
@@ -90,7 +90,7 @@ def fetch_day(date_str: str, airports: list) -> pd.DataFrame:
     return pd.DataFrame(all_records)
 
 # load live data as parquet to directory
-def land_parquet_gcs(df: pd.DataFrame, date_str, bucket_name=GCS_BUCKET):
+def land_parquet_gcs(df, date_str, bucket_name=GCS_BUCKET):
     client = storage.Client()
     bucket = client.bucket(bucket_name)
     
@@ -101,10 +101,10 @@ def land_parquet_gcs(df: pd.DataFrame, date_str, bucket_name=GCS_BUCKET):
     print(f"Wrote {len(df):,} rows -> {bucket_name}")
     
     
-def run(date_str: str, airports: list[str]):
+def run(date_str, airports):
     df = fetch_day(date_str, airports)
     land_parquet_gcs(df, date_str)
  
  
-if __name__ == "__main__":
-    run()
+# if __name__ == "__main__":
+#     run()

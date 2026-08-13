@@ -1,11 +1,11 @@
 # Ingestion deps 
-pandas==2.2.3
-requests==2.32.3
+pandas==3.0.3
+requests==2.34.2
 python-dateutil==2.9.0.post0
 google-cloud-storage==2.19.0
-pyarrow==18.1.0
+pyarrow==25.0.0
 
 # dbt
-dbt-bigquery==1.9.0
+dbt-bigquery==1.12.0
 
-python-dotenv==1.0.1
+python-dotenv==1.2.2

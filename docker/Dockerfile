@@ -1,7 +1,7 @@
-FROM apache/airflow:2.10.5-python3.12
+FROM apache/airflow:3.3.0-python3.14
 
 USER root
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends git \
     build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

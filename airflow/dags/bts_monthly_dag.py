@@ -1,11 +1,11 @@
-from airflow.decorators import dag, task
+from airflow.sdk import dag, task
 from datetime import datetime
 
 from ingestion.download_bts_data import run
 
 @dag(
-    schedule="0 8 5 * *",
-    start_date=datetime(2026, 8, 3),
+    schedule="0 8 1 * *", # 8 am UTC on the 1st day of every month 
+    start_date=datetime(2026, 8, 1), 
     catchup=False,
     tags=["bts", "monthly"]
 )
@@ -22,6 +22,6 @@ def bts_monthly_dag():
     def dbt_test_bts():
         return "cd /opt/dbt_project && dbt test --select stg_bts_ontime+"
 
-    download_bts() >> dbt_run_bts() >> dbt_test_bts()
+    download_bts() >> dbt_run_bts() >> dbt_test_bts() # pyright: ignore [reportUnusedExpression]
 
 bts_monthly_dag()

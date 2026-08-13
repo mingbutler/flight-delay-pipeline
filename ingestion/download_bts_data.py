@@ -1,12 +1,20 @@
 import io
 import os
+import tempfile
+import typing
+from pandas._typing import DtypeArg
 
 from zipfile import ZipFile
 from datetime import datetime
 
 import requests
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 from dateutil.relativedelta import relativedelta
+
+from typing import List
+import numpy as np
 
 from google.cloud import storage
 
@@ -57,7 +65,7 @@ def get_latest_available_month():
     
     raise FileNotFoundError("Could not locate any recent BTS zip files. Please check your network connection.")
 
-COLUMNS_KEEP = [
+COLUMNS_KEEP: List[str] = [
     "FlightDate", "Reporting_Airline", "Flight_Number_Reporting_Airline", "Origin", "Dest",
     "CRSDepTime", "DepTime", "DepDelayMinutes",
     "CRSArrTime", "ArrTime", "ArrDelayMinutes",
@@ -67,6 +75,47 @@ COLUMNS_KEEP = [
     "SecurityDelay", "LateAircraftDelay",
 ]
 
+DTYPE_OVERRIDES: typing.Mapping[typing.Hashable, DtypeArg] = {
+    "CancellationCode": "object",   # NaN when not cancelled, 'A'/'B'/'C'/'D' when it is
+    "Cancelled": "float64",
+    "Diverted": "float64",
+}
+
+CHUNK_ROWS = 100_000
+
+def download_zip_to_tempfile(url):
+    # streams to disk
+    fd, path = tempfile.mkstemp(suffix=".zip")
+
+    with os.fdopen(fd, 'wb') as temp_file:
+        with requests.get(url, stream=True, timeout=120) as response:
+            response.raise_for_status()
+            # write contents in chunks to temp file
+            for chunk in response.iter_content(chunk_size=1048576):
+                temp_file.write(chunk)
+    return path
+
+def csv_to_parquet_chunked(zip_path, out_path):
+    # reads CSV in chunks and writes to parquet incrementally
+    total_rows = 0
+    writer = None
+    try:
+        with ZipFile(zip_path) as file:
+            csv_file = next(n for n in file.namelist() if n.endswith('csv'))
+            with file.open(csv_file) as f:
+                # read CSV
+                for chunk in pd.read_csv(f, usecols=COLUMNS_KEEP, dtype=DTYPE_OVERRIDES, chunksize=CHUNK_ROWS, low_memory=False):
+                    table = pa.Table.from_pandas(chunk, preserve_index=False)
+                    if writer is None:
+                        writer = pq.ParquetWriter(out_path, table.schema)
+                    # write to parquet
+                    writer.write_table(table)
+                    total_rows += len(chunk)
+    finally:
+        if writer is not None:
+              writer.close()
+    return total_rows 
+
 def download_month():
     # find latest month url
     try:
@@ -74,40 +123,50 @@ def download_month():
     except FileNotFoundError as e:
         raise RuntimeError(f"No recent BTS zip files found: {e}") from e
     
-    # download with progress bar
     print(f"\nDownloading: {url}")
+    zip_path = None
+    parquet_path = None
     try:
-        response = requests.get(url, stream=True, timeout=120)
-        response.raise_for_status()
+        zip_path = download_zip_to_tempfile(url)
+        print("Download complete. Converting to Parquet...")
         
-        with ZipFile(io.BytesIO(response.content)) as file:
-            csv_file = next(n for n in file.namelist() if n.endswith('.csv'))
-            with file.open(csv_file) as f:
-                df = pd.read_csv(f, usecols=lambda c: c in COLUMNS_KEEP, low_memory=False)
-        print("\nDownload complete.")
-        return df, year, month
-
+        parquet_fd, parquet_path = tempfile.mkstemp(suffix=".parquet")
+        os.close(parquet_fd)
+        row_count = csv_to_parquet_chunked(zip_path, parquet_path)
+        
+        print(f"Converted {row_count:,} rows to Parquet.")
+        return parquet_path, year, month
     except requests.RequestException as e:
         raise RuntimeError(f"Error during download: {e}") from e
+    finally:
+        # cleanup temp zip files
+        if zip_path and os.path.exists(zip_path):
+            os.remove(zip_path)
 
-def land_parquet_gcs(df: pd.DataFrame, year, month, bucket_name=GCS_BUCKET):  
+def land_parquet_gcs(parquet_path, year, month, bucket_name=GCS_BUCKET):  
     client = storage.Client()
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(f"raw/bts/year={year}/month={month:02d}/flights.parquet")
-    blob.upload_from_string(df.to_parquet(index=False), content_type="application/octet-stream")
+    blob.upload_from_filename(parquet_path, content_type="application/octet-stream")
      
-    print(f"Wrote {len(df):,} rows -> {bucket_name}")
+    print(f"Wrote {parquet_path} -> {bucket_name}")
     
 def run():
+    parquet_path = None
+    year = month = None
     try:
-        df, year, month = download_month()
-        land_parquet_gcs(df, year, month) 
+        parquet_path, year, month = download_month()
+        land_parquet_gcs(parquet_path, year, month)
     except requests.HTTPError as e:
-        print(
-                f"  Failed for {year}-{month:02d}: {e}. "
-                "If this is the most recent month, BTS may not have published "
-                "it yet -- they typically lag ~6-8 weeks behind month end."
-            )
+        raise RuntimeError(
+            f"Failed for {year}-{month if month is None else f'{month:02d}'}: {e}. "
+            "If this is the most recent month, BTS may not have published "
+            "it yet. They typically lag 6-8 weeks behind month end."
+        ) from e
+    finally:
+        # cleanup
+        if parquet_path and os.path.exists(parquet_path):
+            os.remove(parquet_path)
             
-if __name__ == "__main__":
-    run()
+# if __name__ == "__main__":
+#     run()
