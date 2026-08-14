@@ -1,7 +1,9 @@
-from airflow.sdk import dag, task
+from airflow.sdk import dag, task, Asset
 from datetime import datetime, timedelta
 
 from ingestion.fetch_live_flights import run
+
+live_raw_asset = Asset("gcs://flight-delay-raw/raw/live/")
 
 @dag(
     schedule="0 6 * * *", # 6 AM UTC daily
@@ -11,17 +13,17 @@ from ingestion.fetch_live_flights import run
     tags=["live", "aerodatabox"]
 )
 def live_flights_daily_dag():
-    @task
+    @task(outlets=[live_raw_asset])
     def fetch_flights(ds=None):
         run(date_str=ds, airports=['ATL'])
         
     @task.bash
     def dbt_run_live():
-        return "cd /opt/dbt_project && dbt run --select stg_live_flights+ --target prod"
+        return "cd /opt/dbt_project && dbt run --select stg_live_flights --target prod"
     
     @task.bash
     def dbt_test_live():
-        return "cd /opt/dbt_project && dbt test --select stg_live_flights+"
+        return "cd /opt/dbt_project && dbt test --select stg_live_flights"
     
     fetch_flights() >> dbt_run_live() >> dbt_test_live() # pyright: ignore [reportUnusedExpression]
     
