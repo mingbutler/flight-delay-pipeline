@@ -1,13 +1,8 @@
-import datetime
 import os
-
-from datetime import datetime, timedelta, timezone
-from textwrap import indent
 
 import requests
 import pandas as pd
 from dotenv import load_dotenv
-import json
 
 from google.cloud import storage
 from airflow.models import Variable
