@@ -66,8 +66,6 @@ def fetch_window(airport, from_local, to_local):
     response = requests.get(url, headers=_get_headers(), params=params, timeout=60)
     response.raise_for_status()
     payload = response.json()
-    
-    print(json.dumps(payload.get('departures', [])[0], indent=2))
  
     records = []
     for flight in payload.get("departures", []):
@@ -94,7 +92,6 @@ def land_parquet_gcs(df, date_str, bucket_name=GCS_BUCKET):
     client = storage.Client()
     bucket = client.bucket(bucket_name)
     
-    dt = datetime.strptime(date_str, "%Y-%m-%d")
     blob = bucket.blob(f"raw/live/dt={date_str}/flights.parquet")
     blob.upload_from_string(df.to_parquet(index=False), content_type="application/octet-stream")
     
