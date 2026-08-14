@@ -25,7 +25,12 @@ Transportation Statistics (BTS) "Airline On-Time Performance"
 
 GCS_BUCKET = os.environ.get("GCS_BUCKET", "flight-delay-raw")
 
-PAST_MONTHS_DOWNLOADED = set()
+
+# custom exception for no new data available
+class NoNewDataError(Exception):
+    pass
+
+
 
 def check_url_exists(url):
     try:
@@ -34,6 +39,13 @@ def check_url_exists(url):
         return response.status_code == 200 and 'html' not in response.headers.get('content-type', '')
     except requests.RequestException:
         return False
+    
+# check with GCS if a month has already been downloaded 
+def month_already_ingested(year, month, bucket_name=GCS_BUCKET):
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(f"raw/bts/year={year}/month={month:02d}/flights.parquet")
+    return blob.exists()
     
 def get_latest_available_month():
     current_date = datetime.now()
@@ -44,18 +56,15 @@ def get_latest_available_month():
     
     # look back 6 months for most recent upload
     for _ in range(6):
-        url = f"https://transtats.bts.gov/PREZIP/On_Time_Reporting_Carrier_On_Time_Performance_1987_present_{year}_{month}.zip"
         print(f"Checking {year}-{month:02d}... ", end="")
         
-        if (year, month) in PAST_MONTHS_DOWNLOADED:
-            raise FileExistsError(f"Month {year}-{month:02d} already downloaded.")
-        
-        if check_url_exists(url):
-            print("FOUND!")
-            PAST_MONTHS_DOWNLOADED.add((year, month))
-            return url, year, month
-        
-        print(f"Month of {month} not available yet.")
+        if month_already_ingested(year, month):
+            print(f"{year}-{month:02d} already ingested, skipping.")
+        else:
+            url = f"https://transtats.bts.gov/PREZIP/On_Time_Reporting_Carrier_On_Time_Performance_1987_present_{year}_{month}.zip"
+            if check_url_exists(url):
+                print(f"FOUND new month: {year}-{month:02d}")
+                return url, year, month
         
         if month == 1:
             month = 12
@@ -63,7 +72,7 @@ def get_latest_available_month():
         else:
             month -= 1
     
-    raise FileNotFoundError("Could not locate any recent BTS zip files. Please check your network connection.")
+    raise NoNewDataError("No new BTS month available to ingest.")
 
 COLUMNS_KEEP: List[str] = [
     "FlightDate", "Reporting_Airline", "Flight_Number_Reporting_Airline", "Origin", "Dest",
@@ -120,8 +129,8 @@ def download_month():
     # find latest month url
     try:
         url, year, month = get_latest_available_month()
-    except FileNotFoundError as e:
-        raise RuntimeError(f"No recent BTS zip files found: {e}") from e
+    except NoNewDataError as e:
+        raise RuntimeError(f"No new BTS data available: {e}") from e
     
     print(f"\nDownloading: {url}")
     zip_path = None
