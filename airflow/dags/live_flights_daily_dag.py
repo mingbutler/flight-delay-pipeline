@@ -7,7 +7,7 @@ live_raw_asset = Asset("gcs://flight-delay-raw/raw/live/")
 
 @dag(
     schedule="0 6 * * *", # 6 AM UTC daily
-    start_date=datetime(2026, 8, 20),
+    start_date=datetime(2026, 8, 13),
     catchup=False,
     default_args={"retries": 2, "retry_delay": timedelta(minutes=5)},
     tags=["live", "aerodatabox"]
