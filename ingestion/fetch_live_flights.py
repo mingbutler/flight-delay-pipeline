@@ -18,9 +18,8 @@ BASE_URL = "https://aerodatabox.p.rapidapi.com/flights/airports/iata"
 DEFAULT_AIRPORTS = ["ATL"]
 
 def _get_headers() -> dict:
-    api_key = Variable.get("AERODATABOX_API_KEY")
     return {
-        "X-RapidAPI-Key": api_key,
+        "X-RapidAPI-Key": API_KEY,
         "X-RapidAPI-Host": API_HOST,
     }
 
