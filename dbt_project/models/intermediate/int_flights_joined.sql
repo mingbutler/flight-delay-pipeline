@@ -1,5 +1,5 @@
 select 
-     h.flight_date,
+    h.flight_date,
     h.carrier,
     h.flight_number,
     h.Origin,
