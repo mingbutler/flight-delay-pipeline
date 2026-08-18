@@ -10,7 +10,7 @@ bts_raw_asset = Asset("gcs://flight-delay-raw/raw/bts/")
 def mart_flights_triggered_by_bts():
     @task.bash
     def dbt_run_mart():
-        return "cd /opt/dbt_project && dbt run --select stg_bts_ontime+ stg_live_flights+ --target prod"
+        return "cd /opt/dbt_project && dbt deps && dbt run --select stg_bts_ontime+ stg_live_flights+ --target prod"
     
     @task.bash
     def dbt_test_mart():

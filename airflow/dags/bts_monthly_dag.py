@@ -18,7 +18,7 @@ def bts_monthly_dag():
     
     @task.bash
     def dbt_run_bts():
-        return "cd /opt/dbt_project && dbt run --select stg_bts_ontime --target prod"
+        return "cd /opt/dbt_project && dbt deps && dbt run --select stg_bts_ontime --target prod"
     
     @task.bash
     def dbt_test_bts():

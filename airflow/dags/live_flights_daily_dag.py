@@ -19,7 +19,7 @@ def live_flights_daily_dag():
         
     @task.bash
     def dbt_run_live():
-        return "cd /opt/dbt_project && dbt run --select stg_live_flights --target prod"
+        return "cd /opt/dbt_project && dbt deps && dbt run --select stg_live_flights --target prod"
     
     @task.bash
     def dbt_test_live():
