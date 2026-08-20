@@ -17,6 +17,12 @@ select
     h.cancellation_code,
     h.is_diverted,
 
+    h.carrier_delay,
+    h.weather_delay,
+    h.nas_delay,
+    h.security_delay,
+    h.late_aircraft_delay,
+
     l.actual_dep_time as live_actual_dep_time,
     l.actual_arr_time as live_actual_arr_time,
     l.flight_status as live_flight_status,
@@ -30,4 +36,3 @@ left join {{ ref('stg_live_flights') }} l
     and h.flight_number = l.flight_number
     and h.flight_date = l.flight_date
     and h.Origin = l.Origin
-

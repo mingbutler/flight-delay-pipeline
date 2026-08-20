@@ -1,0 +1,21 @@
+models:
+  - name: fct_flight_delays
+    columns:
+      - name: carrier
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_carrier')
+                field: carrier_code
+      - name: origin_airport
+        tests:
+          - relationships:
+              arguments: 
+                to: ref('dim_airports')
+                field: iata_code
+      - name: flight_date
+        tests:
+          - relationships:
+              arguments: 
+                to: ref('dim_date')
+                field: date_day
