@@ -14,7 +14,7 @@ def mart_flights_triggered_by_live():
     
     @task.bash
     def dbt_test_mart():
-        return "cd /opt/dbt_project && dbt test --select stg_bts_ontime+ stg_live_flights+"
+        return "cd /opt/dbt_project && dbt test --select stg_bts_ontime+ stg_live_flights+ dim_date dim_carrier dim_airports"
     
     dbt_run_mart() >> dbt_test_mart() # pyright: ignore [reportUnusedExpression]
     
