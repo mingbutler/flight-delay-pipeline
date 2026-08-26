@@ -13,7 +13,7 @@ Airflow-orchestrated pipeline: ingest BTS historical + AeroDataBox live flight d
 1. Docker Desktop (or Docker Engine + Compose v2)
 2. GCP project with BigQuery dataset and GCS bucket
 3. Service account JSON with GCS write + BigQuery permissions
-4. BigQuery external tables — see `infra/bigquery_external_tables.sql`
+4. BigQuery external tables — Adding soon
 5. AeroDataBox API key (for live flights DAG)
 
 ## Local setup
@@ -26,7 +26,6 @@ cp docker/dbt/profiles.yml.example docker/dbt/profiles.yml
 # Edit docker/dbt/profiles.yml with your GCP project + dataset
 
 cp .env.example .env
-# Set AIRFLOW__CORE__FERNET_KEY and AIRFLOW_UID (run: id -u)
 
 # 2. Initialize and start Airflow
 docker compose up airflow-init
