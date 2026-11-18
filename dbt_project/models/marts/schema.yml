@@ -1,5 +1,12 @@
+version: 2
+
 models:
   - name: fct_flight_delays
+    description: "One row per flight (flight_date + carrier + flight_number + origin_airport)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['flight_date', 'carrier', 'flight_number', 'origin_airport']
     columns:
       - name: carrier
         tests:
@@ -10,12 +17,49 @@ models:
       - name: origin_airport
         tests:
           - relationships:
-              arguments: 
+              arguments:
                 to: ref('dim_airports')
                 field: iata_code
       - name: flight_date
         tests:
           - relationships:
-              arguments: 
+              arguments:
                 to: ref('dim_date')
                 field: date_day
+
+  - name: dim_carrier
+    columns:
+      - name: carrier_code
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_airports
+    columns:
+      - name: iata_code
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_date
+    columns:
+      - name: date_day
+        tests:
+          - unique
+          - not_null
+      - name: holiday_name
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - New Year\'s Day
+                  - Martin Luther King Jr. Day
+                  - Washington\'s Birthday
+                  - Memorial Day
+                  - Juneteenth
+                  - Independence Day
+                  - Labor Day
+                  - Columbus Day
+                  - Veterans Day
+                  - Thanksgiving Day
+                  - Christmas Day

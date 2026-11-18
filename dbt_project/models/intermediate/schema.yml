@@ -3,6 +3,11 @@ version: 2
 models:
   - name: int_flights_joined
     description: "BTS historical records left-joined against AeroDataBox live records on carrier, flight number, date, and origin"
+    tests:
+      # a left join must not fan out: still one row per BTS flight
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['flight_date', 'carrier', 'flight_number', 'Origin']
     columns:
       - name: flight_number
         tests:

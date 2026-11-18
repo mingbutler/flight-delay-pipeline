@@ -1,6 +1,7 @@
 select
     flight_date,
     carrier,
+    flight_number,
     Origin as origin_airport,
     Dest as dest_airport,
 

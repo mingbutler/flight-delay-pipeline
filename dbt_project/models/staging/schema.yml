@@ -2,7 +2,12 @@ version: 2
 
 models:
   - name: stg_bts_ontime
-    description: "Cleaned historical BTS flight records"
+    description: "Cleaned, validated and deduplicated historical BTS flight records. One row per flight_date + carrier + flight_number + origin."
+    tests:
+      # grain = join key into int_flights_joined
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['flight_date', 'carrier', 'flight_number', 'Origin']
     columns:
       - name: flight_date
         tests:
@@ -10,20 +15,61 @@ models:
       - name: carrier
         tests:
           - not_null
+      - name: flight_number
+        tests:
+          - not_null
+      - name: Origin
+        tests:
+          - not_null
+      - name: Dest
+        tests:
+          - not_null
       - name: cancellation_code
         tests:
           - accepted_values:
-              arguments: 
-                values: ['A', 'B', 'C', 'D', null]
+              arguments:
+                values: ['A', 'B', 'C', 'D']
+      - name: dep_delay_minutes
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: "{{ var('max_delay_minutes') }}"
+      - name: arr_delay_minutes
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: "{{ var('max_delay_minutes') }}"
+      - name: distance
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: "{{ var('max_distance_miles') }}"
 
   - name: stg_live_flights
-    description: "Cleaned live AeroDataBox flight records"
+    description: "Cleaned, validated and deduplicated live AeroDataBox flight records. One row per flight_date + carrier + flight_number + origin."
+    tests:
+      # grain = join key into int_flights_joined; duplicates here would fan out the left join
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['flight_date', 'carrier', 'flight_number', 'Origin']
     columns:
       - name: flight_date
+        tests:
+          - not_null
+      - name: carrier
+        tests:
+          - not_null
+      - name: flight_number
+        tests:
+          - not_null
+      - name: Origin
         tests:
           - not_null
       - name: direction
         tests:
           - accepted_values:
-              arguments: 
+              arguments:
                 values: ['departure', 'arrival']

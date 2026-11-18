@@ -42,3 +42,9 @@ models:
       +schema: marts
     # Config indicated by + and applies to all files under models/example/
 
+
+# Data quality bounds used by the staging models
+vars:
+  min_flight_date: '1987-10-01'   # first month of BTS on-time reporting
+  max_delay_minutes: 2880         # 48h; anything larger is treated as bad data
+  max_distance_miles: 6000        # longer than any US domestic route
